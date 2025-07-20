@@ -25,14 +25,14 @@ public class CreateOrderTest extends BaseTest {
     public void startUpSecond() {
         orderSteps = new OrderSteps();
         userSteps = new UserSteps();
+        user = getRandomUser();
+        userSteps.createUser(user);
     }
 
     @Test
     @DisplayName("Проверка создания заказа с ингредиентами с авторизацией пользователя")
     public void createOrderWithIngredientsWithAuthorizationResponse200Test() {
-        user = getRandomUser();
-        userSteps.createUser(user);
-        String accessToken = userSteps.userLogin(user.getEmail(), user.getPassword())
+        String accessToken = userSteps.userLogin(user)
                 .extract().body().path("accessToken");
         String accessTokenWithoutBearer = accessToken.replace("Bearer ", "");
         ArrayList<String> ingredients = new ArrayList<>();
@@ -65,9 +65,7 @@ public class CreateOrderTest extends BaseTest {
     @Test
     @DisplayName("Проверка создания заказа без ингредиентов с авторизацией пользователя")
     public void createOrderWithoutIngredientsWithAuthorizationResponse400Test() {
-        user = getRandomUser();
-        userSteps.createUser(user);
-        String accessToken = userSteps.userLogin(user.getEmail(), user.getPassword())
+        String accessToken = userSteps.userLogin(user)
                 .extract().body().path("accessToken");
         String accessTokenWithoutBearer = accessToken.replace("Bearer ", "");
         Order order = new Order(null);
@@ -92,9 +90,7 @@ public class CreateOrderTest extends BaseTest {
     @Test
     @DisplayName("Проверка создания заказа с неверным хешем ингредиентов с авторизацией пользователя")
     public void createOrderWithInvalidIngredientsHashWithAuthorizationResponse500Test() {
-        user = getRandomUser();
-        userSteps.createUser(user);
-        String accessToken = userSteps.userLogin(user.getEmail(), user.getPassword())
+        String accessToken = userSteps.userLogin(user)
                 .extract().body().path("accessToken");
         String accessTokenWithoutBearer = accessToken.replace("Bearer ", "");
         ArrayList<String> ingredients = new ArrayList<>();
@@ -119,7 +115,7 @@ public class CreateOrderTest extends BaseTest {
     @After
     public void tearDown() {
         try {
-            String accessToken = userSteps.userLogin(user.getEmail(), user.getPassword())
+            String accessToken = userSteps.userLogin(user)
                     .extract().body().path("accessToken");
 
             if (accessToken != null) {

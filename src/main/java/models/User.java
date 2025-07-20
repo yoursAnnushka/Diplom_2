@@ -29,6 +29,18 @@ public class User {
         return name;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public static User getRandomUser() {
         String email = RandomStringUtils.randomAlphabetic(8).toLowerCase() + "@ya.ru";
         String password = RandomStringUtils.randomAlphabetic(8);

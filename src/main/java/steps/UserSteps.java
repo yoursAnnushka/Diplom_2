@@ -22,12 +22,9 @@ public class UserSteps {
     }
 
     @Step("Авторизация пользователя")
-    public ValidatableResponse userLogin(String email, String password) {
+    public ValidatableResponse userLogin(User user) {
         return given()
-                .body("{\n" +
-                        "\"email\": \""+ email +"\",\n" +
-                        "\"password\": \""+ password +"\"\n" +
-                        "}")
+                .body(user)
                 .when()
                 .post(ENDPOINT_USER_LOGIN)
                 .then();
@@ -36,9 +33,7 @@ public class UserSteps {
     @Step("Удаление пользователя")
     public void deleteUser(String accessToken) {
         given()
-                .body("{\n" +
-                        "\"accessToken\": \""+ accessToken +"\"\n" +
-                        "}")
+                .body(accessToken)
                 .when()
                 .delete(ENDPOINT_DELETE_USER)
                 .then();

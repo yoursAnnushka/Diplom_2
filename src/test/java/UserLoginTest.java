@@ -25,7 +25,7 @@ public class UserLoginTest extends BaseTest {
     @Test
     @DisplayName("Проверка авторизации пользователя")
     public void userLoginWithValidCredentialsResponse200Test() {
-        userSteps.userLogin(user.getEmail(), user.getPassword())
+        userSteps.userLogin(user)
                 .statusCode(200)
                 .and()
                 .body("success", Matchers.is(true))
@@ -38,7 +38,8 @@ public class UserLoginTest extends BaseTest {
     @Test
     @DisplayName("Проверка авторизации пользователя без логина")
     public void userLoginWithoutLoginResponse401Test() {
-        userSteps.userLogin("", user.getPassword())
+        user.setEmail("");
+        userSteps.userLogin(user)
                 .statusCode(401)
                 .and()
                 .body("success", Matchers.is(false))
@@ -48,7 +49,8 @@ public class UserLoginTest extends BaseTest {
     @Test
     @DisplayName("Проверка авторизации пользователя без пароля")
     public void userLoginWithoutPasswordResponse401Test() {
-        userSteps.userLogin(user.getEmail(), "")
+        user.setPassword("");
+        userSteps.userLogin(user)
                 .statusCode(401)
                 .and()
                 .body("success", Matchers.is(false))
@@ -59,7 +61,8 @@ public class UserLoginTest extends BaseTest {
     @DisplayName("Проверка авторизации с невалидным логином")
     public void userLoginWithInvalidLoginResponse401Test() {
         String email = RandomStringUtils.randomAlphabetic(6).toLowerCase() + "@ya.ru";
-        userSteps.userLogin(email, user.getPassword())
+        user.setEmail(email);
+        userSteps.userLogin(user)
                 .statusCode(401)
                 .and()
                 .body("success", Matchers.is(false))
@@ -70,7 +73,8 @@ public class UserLoginTest extends BaseTest {
     @DisplayName("Проверка авторизации с невалидным паролем")
     public void userLoginWithInvalidPasswordResponse401Test() {
         String password = RandomStringUtils.randomAlphabetic(6);
-        userSteps.userLogin(user.getEmail(), password)
+        user.setPassword(password);
+        userSteps.userLogin(user)
                 .statusCode(401)
                 .and()
                 .body("success", Matchers.is(false))
@@ -82,7 +86,9 @@ public class UserLoginTest extends BaseTest {
     public void userLoginOfNonExistentUserResponse401Test() {
         String email = RandomStringUtils.randomAlphabetic(9).toLowerCase() + "@ya.ru";
         String password = RandomStringUtils.randomAlphabetic(6);
-        userSteps.userLogin(email, password)
+        user.setEmail(email);
+        user.setPassword(password);
+        userSteps.userLogin(user)
                 .statusCode(401)
                 .and()
                 .body("success", Matchers.is(false))
@@ -92,7 +98,7 @@ public class UserLoginTest extends BaseTest {
     @After
     public void tearDown() {
         try {
-            String accessToken = userSteps.userLogin(user.getEmail(), user.getPassword())
+            String accessToken = userSteps.userLogin(user)
                     .extract().body().path("accessToken");
 
             if (accessToken != null) {

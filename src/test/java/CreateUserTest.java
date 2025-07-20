@@ -86,7 +86,7 @@ public class CreateUserTest extends BaseTest {
     @After
     public void tearDown() {
         try {
-            String accessToken = userSteps.userLogin(user.getEmail(), user.getPassword())
+            String accessToken = userSteps.userLogin(user)
                     .extract().body().path("accessToken");
 
             if (accessToken != null) {
